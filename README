@@ -1,1 +1,3 @@
 東北電力の計画停電PDFから住所リストを作成するプログラムです。
+
+元データとなるPDF は http://www.tohoku-epco.co.jp/information/1182377_821.html から取得してください。
