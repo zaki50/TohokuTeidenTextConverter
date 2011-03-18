@@ -65,19 +65,27 @@ public class PdfToAddressListMain {
      * @throws InterruptedException スレッドが割り込まれた場合。
      */
     public static void main(String[] args) throws IOException, InterruptedException {
-        if (args.length != 1) {
-            System.err.println("ターゲットディレクトリが指定されていません。");
-            return;
+        final File targetDir;
+        if (args.length == 0) {
+            targetDir = new File(".");
+            System.err.println("ターゲットディレクトリが指定されていないので、カレントディレクトリから PDF ファイルを探します: "
+                    + targetDir.getAbsolutePath());
+        } else {
+            targetDir = new File(args[0]);
+            System.err.println("以下の場所からから PDF ファイルを探します: " + targetDir.getAbsolutePath());
         }
-        final File targetDir = new File(args[0]);
+
         if (!targetDir.isDirectory()) {
             System.err.println("ターゲットがディレクトリではありません: " + targetDir.getPath());
             return;
         }
 
         for (File rawfile : listTargetFiles(targetDir)) {
+            System.err.println("変換中: " + rawfile.getName());
             final String outStr = extractAddressLines(rawfile);
-            FileUtils.writeStringToFile(replaceExtention(rawfile, OUT_EXTENSION), outStr, ENCODING);
+            final File outFile = replaceExtention(rawfile, OUT_EXTENSION);
+            FileUtils.writeStringToFile(outFile, outStr, ENCODING);
+            System.err.println("生成完了: " + outFile.getName());
         }
     }
 
