@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -55,7 +56,7 @@ public class PdfToAddressListMain {
     /**
      * 生テキストで、番地を区切る際に使用されている文字(列)です。
      */
-    private static final String LOCAL_SEPARATOR = "，";
+    private static final Pattern LOCAL_SEPARATOR_REGEXP = Pattern.compile("(，|,)");
 
     /**
      * メインメソッド。引き数で、処理対象のPDFファイルが置かれたディレクトリを指定してください。
@@ -213,7 +214,7 @@ public class PdfToAddressListMain {
             return ImmutableList.<String> of();
         }
         final List<String> result = Lists.newArrayList();
-        for (String local : localAddresses.toString().split(LOCAL_SEPARATOR)) {
+        for (String local : localAddresses.toString().split(LOCAL_SEPARATOR_REGEXP.pattern())) {
             final String fullAddress = prefecture + municipality + local + " " + groupNumber;
             result.add(fullAddress);
         }
@@ -327,7 +328,7 @@ public class PdfToAddressListMain {
         if (!meetsTailCondition) {
             return false;
         }
-        return !line.contains(LOCAL_SEPARATOR);
+        return !LOCAL_SEPARATOR_REGEXP.matcher(line).find();
     }
 
     /**
