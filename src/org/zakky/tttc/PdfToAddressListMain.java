@@ -156,6 +156,7 @@ public class PdfToAddressListMain {
                     result.append('\n');
                 }
                 groupNumber = currentGroupNumber;
+                localAddresses.setLength(0);
                 continue;
             }
 
@@ -172,6 +173,7 @@ public class PdfToAddressListMain {
                     result.append('\n');
                 }
                 prefecture = currentPrefecture;
+                localAddresses.setLength(0);
                 continue;
             }
 
@@ -189,6 +191,7 @@ public class PdfToAddressListMain {
                 }
                 prefecture = currentPrefecture;
                 municipality = currentMunicipality;
+                localAddresses.setLength(0);
                 continue;
             }
 
@@ -209,7 +212,8 @@ public class PdfToAddressListMain {
      */
     private static List<String> toAddressLines(Integer groupNumber, String prefecture,
             String municipality, CharSequence localAddresses) {
-        if (groupNumber == null || prefecture == null || municipality == null) {
+        if (groupNumber == null || prefecture == null || municipality == null
+                || localAddresses.length() == 0) {
             assert localAddresses.length() == 0;
             return ImmutableList.<String> of();
         }
