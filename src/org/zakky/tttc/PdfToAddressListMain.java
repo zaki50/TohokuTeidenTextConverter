@@ -149,14 +149,8 @@ public class PdfToAddressListMain {
                 continue;
             }
             if (changed(groupNumber, currentGroupNumber)) {
-                final List<String> addressLines = toAddressLines(groupNumber, prefecture,
-                        municipality, localAddresses);
-                for (String addressLine : addressLines) {
-                    result.append(addressLine);
-                    result.append('\n');
-                }
+                writeToResult(result, groupNumber, prefecture, municipality, localAddresses);
                 groupNumber = currentGroupNumber;
-                localAddresses.setLength(0);
                 continue;
             }
 
@@ -166,14 +160,8 @@ public class PdfToAddressListMain {
                 continue;
             }
             if (changed(prefecture, currentPrefecture)) {
-                final List<String> addressLines = toAddressLines(groupNumber, prefecture,
-                        municipality, localAddresses);
-                for (String addressLine : addressLines) {
-                    result.append(addressLine);
-                    result.append('\n');
-                }
+                writeToResult(result, groupNumber, prefecture, municipality, localAddresses);
                 prefecture = currentPrefecture;
-                localAddresses.setLength(0);
                 continue;
             }
 
@@ -183,30 +171,38 @@ public class PdfToAddressListMain {
             }
 
             if (changed(municipality, currentMunicipality)) {
-                final List<String> addressLines = toAddressLines(groupNumber, prefecture,
-                        municipality, localAddresses);
-                for (String addressLine : addressLines) {
-                    result.append(addressLine);
-                    result.append('\n');
-                }
+                writeToResult(result, groupNumber, prefecture, municipality, localAddresses);
                 prefecture = currentPrefecture;
                 municipality = currentMunicipality;
-                localAddresses.setLength(0);
                 continue;
             }
 
             localAddresses.append(line);
         }
 
-        final List<String> addressLines = toAddressLines(groupNumber, prefecture,
-                municipality, localAddresses);
+        writeToResult(result, groupNumber, prefecture, municipality, localAddresses);
+
+        return result.toString();
+    }
+
+    /**
+     * 現在保持している住所情報を、結果文字列へ書き出します。
+     *
+     * @param result 結果文字列。 {@code null} 禁止。
+     * @param groupNumber グループ番号。 {@code null} 禁止。
+     * @param prefecture 県名。 {@code null} 禁止。
+     * @param municipality 市区町村名。 {@code null} 禁止。
+     * @param localAddresses 番地情報(区切り文字で複数の番地が区切られている)。 {@code null} 禁止。
+     */
+    private static void writeToResult(final StringBuilder result, Integer groupNumber,
+            String prefecture, String municipality, final StringBuilder localAddresses) {
+        final List<String> addressLines = toAddressLines(groupNumber, prefecture, municipality,
+                localAddresses);
         for (String addressLine : addressLines) {
             result.append(addressLine);
             result.append('\n');
         }
         localAddresses.setLength(0);
-
-        return result.toString();
     }
 
     /**
