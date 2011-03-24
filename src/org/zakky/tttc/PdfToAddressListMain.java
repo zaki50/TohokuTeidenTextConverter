@@ -198,6 +198,14 @@ public class PdfToAddressListMain {
             localAddresses.append(line);
         }
 
+        final List<String> addressLines = toAddressLines(groupNumber, prefecture,
+                municipality, localAddresses);
+        for (String addressLine : addressLines) {
+            result.append(addressLine);
+            result.append('\n');
+        }
+        localAddresses.setLength(0);
+
         return result.toString();
     }
 
